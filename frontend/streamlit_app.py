@@ -9,6 +9,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import app  # telemetry patch
 
 import streamlit as st
+
+st.set_page_config(
+    page_title="Christian AI Assistant",
+    page_icon="✝",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
 from app.config import DENOMINATIONS
 
 
@@ -27,15 +35,6 @@ def _init():
 
 from app.services.pipeline import run  # noqa: E402 — must import after index is ready
 from app.services.memory import clear_session  # noqa: E402
-
-# ── Page config ───────────────────────────────────────────────────────────────
-
-st.set_page_config(
-    page_title="Christian AI Assistant",
-    page_icon="✝",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
 
 _init()
 
