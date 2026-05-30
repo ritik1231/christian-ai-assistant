@@ -35,6 +35,21 @@ def _init():
 
 from app.services.pipeline import run  # noqa: E402 — must import after index is ready
 from app.services.memory import clear_session  # noqa: E402
+import requests as _requests
+
+
+def _show_image(url: str) -> None:
+    """Fetch image bytes from URL and display, with a graceful fallback."""
+    try:
+        resp = _requests.get(url, timeout=20)
+        resp.raise_for_status()
+        st.image(resp.content, use_container_width=True)
+    except Exception:
+        st.markdown(
+            f'<div class="warn-badge">⚠️ Could not load image. '
+            f'<a href="{url}" target="_blank">Open in browser</a></div>',
+            unsafe_allow_html=True,
+        )
 
 _init()
 
@@ -208,7 +223,7 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"], avatar="🙏" if msg["role"] == "assistant" else "👤"):
         if msg.get("is_image") and msg.get("image_url"):
             st.markdown(msg["content"])
-            st.image(msg["image_url"], use_container_width=True)
+            _show_image(msg["image_url"])
         else:
             st.markdown(msg["content"])
 
@@ -279,7 +294,7 @@ if user_input:
         # Render response
         if result.get("is_image") and result.get("image_url"):
             st.markdown(result["reply"])
-            st.image(result["image_url"], use_container_width=True)
+            _show_image(result["image_url"])
         else:
             st.markdown(result["reply"])
 
