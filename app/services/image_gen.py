@@ -135,13 +135,12 @@ def _call_pollinations(prompt: str, width: int = 768, height: int = 512) -> str:
     url = f"{POLLINATIONS_BASE}/{encoded}?width={width}&height={height}&nologo=true"
     # Do a HEAD request to confirm the endpoint responds before returning the URL
     try:
-        with httpx.Client(timeout=15) as client:
+        with httpx.Client(timeout=5) as client:
             r = client.head(url, follow_redirects=True)
-            if r.status_code not in (200, 301, 302):
+            if r.status_code not in (200, 301, 302, 404):
                 raise RuntimeError(f"Pollinations returned {r.status_code}")
-    except httpx.TimeoutException:
-        # Return URL anyway — browser/Streamlit will load it
-        pass
+    except (httpx.TimeoutException, httpx.ConnectError):
+        pass  # return URL anyway; actual fetch happens in the frontend
     return url
 
 

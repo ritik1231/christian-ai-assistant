@@ -39,15 +39,16 @@ import requests as _requests
 
 
 def _show_image(url: str) -> None:
-    """Fetch image bytes from URL and display, with a graceful fallback."""
+    """Fetch image bytes from Pollinations (slow, up to 60 s) and display."""
     try:
-        resp = _requests.get(url, timeout=20)
-        resp.raise_for_status()
+        with st.spinner("Generating image… this takes about 15–30 seconds"):
+            resp = _requests.get(url, timeout=90, allow_redirects=True)
+            resp.raise_for_status()
         st.image(resp.content, use_container_width=True)
     except Exception:
         st.markdown(
-            f'<div class="warn-badge">⚠️ Could not load image. '
-            f'<a href="{url}" target="_blank">Open in browser</a></div>',
+            f'<div class="warn-badge">⚠️ Image generation timed out or failed. '
+            f'<a href="{url}" target="_blank">Open in browser to try again</a></div>',
             unsafe_allow_html=True,
         )
 
