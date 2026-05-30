@@ -25,8 +25,6 @@ def _init():
         _ensure_index()
 
 
-_init()
-
 from app.services.pipeline import run  # noqa: E402 — must import after index is ready
 from app.services.memory import clear_session  # noqa: E402
 
@@ -38,6 +36,8 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+_init()
 
 # ── Custom CSS ────────────────────────────────────────────────────────────────
 
