@@ -35,22 +35,17 @@ def _init():
 
 from app.services.pipeline import run  # noqa: E402 — must import after index is ready
 from app.services.memory import clear_session  # noqa: E402
-import requests as _requests
 
 
 def _show_image(url: str) -> None:
-    """Fetch image bytes from Pollinations (slow, up to 60 s) and display."""
-    try:
-        with st.spinner("Generating image… this takes about 15–30 seconds"):
-            resp = _requests.get(url, timeout=90, allow_redirects=True)
-            resp.raise_for_status()
-        st.image(resp.content, use_container_width=True)
-    except Exception:
-        st.markdown(
-            f'<div class="warn-badge">⚠️ Image generation timed out or failed. '
-            f'<a href="{url}" target="_blank">Open in browser to try again</a></div>',
-            unsafe_allow_html=True,
-        )
+    """Render image via browser-side fetch (avoids server network restrictions)."""
+    st.markdown(
+        f'<img src="{url}" style="width:100%; border-radius:8px; margin-top:8px;" '
+        f'onerror="this.style.display=\'none\'; this.nextSibling.style.display=\'block\'"/>'
+        f'<div class="warn-badge" style="display:none">⚠️ Image failed to load. '
+        f'<a href="{url}" target="_blank">Open in browser</a></div>',
+        unsafe_allow_html=True,
+    )
 
 _init()
 
