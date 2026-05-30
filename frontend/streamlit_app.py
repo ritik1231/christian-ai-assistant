@@ -45,10 +45,32 @@ st.markdown("""
 /* Softer background */
 .stApp { background-color: #f7f4f0; }
 
-/* Chat bubbles */
+/* Ensure body text is always dark and readable */
+.stApp, .stApp p, .stApp span, .stApp div {
+    color: #1a1a1a;
+}
+
+/* Chat bubbles — white card with dark text for contrast on any background */
 [data-testid="stChatMessage"] {
     border-radius: 12px;
     margin-bottom: 8px;
+    background-color: #ffffff !important;
+    color: #1a1a1a !important;
+    padding: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+/* Force all text inside chat messages to be dark */
+[data-testid="stChatMessage"] p,
+[data-testid="stChatMessage"] span,
+[data-testid="stChatMessage"] div {
+    color: #1a1a1a !important;
+}
+
+/* Mobile: tighten padding */
+@media (max-width: 640px) {
+    .stApp { padding: 0 4px; }
+    [data-testid="stChatMessage"] { padding: 8px; }
 }
 
 /* Source pill */
